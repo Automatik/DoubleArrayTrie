@@ -604,7 +604,7 @@ public class DoubleArrayTrie implements Serializable {
         String word;
         if(getBase(root) < EMPTY_VALUE) {
             word = composeWord(current, getBase(root));
-            if(word.length() == expression.length && word.substring(index).equals(new String(expression).substring(index)))
+            if(word.length() == expression.length && areEquals(word.substring(index),new String(expression).substring(index)))
                 words.add(word);
             return;
         }
@@ -618,7 +618,7 @@ public class DoubleArrayTrie implements Serializable {
             char next = expression[index];
             if(next == WILDCARD) {
                 int nextIndex = index + 1;
-                for(int i = 1; i <= alphabetSize + 1; i++) { //include the endmarker
+                for(int i = 1; i <= alphabetSize; i++) { //include the endmarker
                     int nextNode = getBase(root) + i;
                     if (getCheck(nextNode) == root)
                         query(expression, nextIndex, nextNode, current + getCharFromOffset(i), words);
@@ -667,6 +667,24 @@ public class DoubleArrayTrie implements Serializable {
         if(tail.length() == 1) //it contains only the endmarker
             return prefix;
         return prefix + tail.substring(0, tail.length() - 1); //remove the endmarker
+    }
+
+    /**
+     * Check if two strings are equals, but considering the
+     * wildcard '?' as equal to every character
+     */
+    private static boolean areEquals(String s1, String s2) {
+        if(s1.length() != s2.length())
+            return false;
+        int i = 0;
+        char[] c1 = s1.toCharArray();
+        char[] c2 = s2.toCharArray();
+        while(i < c1.length) {
+            if(c1[i] != c2[i] && c1[i] != WILDCARD && c2[i] != WILDCARD)
+                return false;
+            i++;
+        }
+        return true;
     }
 
     /**
