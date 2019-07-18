@@ -496,7 +496,7 @@ public class DoubleArrayTrie implements Serializable {
             else {
                 for(int j = 1; j <= alphabetSize + 1; j++) {
                     int tempNode = getBase(current) + j;
-                    if (getCheck(tempNode) == current) {
+                    if (tempNode < getDASize() && getCheck(tempNode) == current) {
                         nodesQueue.offer(tempNode);
                         prefixQueue.offer(composeWord(prefixTemp, getCharFromOffset(j)));
                     }
@@ -525,14 +525,16 @@ public class DoubleArrayTrie implements Serializable {
                 prefix += nextLetter;
                 if(getBase(currentNode) >= EMPTY_VALUE) {
                     int nextNode = getBase(currentNode) + getOffset(nextLetter);
-                    if (getCheck(nextNode) == currentNode && getBase(nextNode) < EMPTY_VALUE)
-                        words.add(composeWord(prefix, getBase(nextNode)));
-                    if (getBase(nextNode) >= EMPTY_VALUE) {
-                        int tailNode = getBase(nextNode) + getOffset(ENDMARKER);
-                        if (getCheck(tailNode) == nextNode && getBase(tailNode) < EMPTY_VALUE)
-                            words.add(composeWord(prefix, ENDMARKER, getBase(tailNode)));
+                    if(nextNode < getDASize()) {
+                        if (getCheck(nextNode) == currentNode && getBase(nextNode) < EMPTY_VALUE)
+                            words.add(composeWord(prefix, getBase(nextNode)));
+                        if (getBase(nextNode) >= EMPTY_VALUE) {
+                            int tailNode = getBase(nextNode) + getOffset(ENDMARKER);
+                            if (getCheck(tailNode) == nextNode && getBase(tailNode) < EMPTY_VALUE)
+                                words.add(composeWord(prefix, ENDMARKER, getBase(tailNode)));
+                        }
+                        currentNode = nextNode;
                     }
-                    currentNode = nextNode;
                 }
             }
         }
@@ -568,7 +570,7 @@ public class DoubleArrayTrie implements Serializable {
                 return;
             } else {
                 int nextNode = getBase(node) + getOffset(ENDMARKER);
-                if (getCheck(nextNode) == node && getBase(nextNode) < EMPTY_VALUE)
+                if (nextNode < getDASize() && getCheck(nextNode) == node && getBase(nextNode) < EMPTY_VALUE)
                     words.add(composeWord(current, ENDMARKER, getBase(nextNode)));
             }
         }
@@ -581,7 +583,7 @@ public class DoubleArrayTrie implements Serializable {
                 temp.remove(ch);
                 int offset = getOffset(ch);
                 int nextNode = getBase(node) + offset;
-                if(nextNode <= getDASize() && getCheck(nextNode) == node)
+                if(nextNode < getDASize() && getCheck(nextNode) == node)
                     permute(temp, current + ch, nextNode, words);
             }
         }
@@ -610,7 +612,7 @@ public class DoubleArrayTrie implements Serializable {
         }
         else {
             int nextNode = getBase(root) + getOffset(ENDMARKER);
-            if (getCheck(nextNode) == root && getBase(nextNode) < EMPTY_VALUE
+            if (nextNode < getDASize() && getCheck(nextNode) == root && getBase(nextNode) < EMPTY_VALUE
                     && (word = composeWord(current, ENDMARKER, getBase(nextNode))).length() == expression.length)
                 words.add(word);
         }
@@ -620,12 +622,12 @@ public class DoubleArrayTrie implements Serializable {
                 int nextIndex = index + 1;
                 for(int i = 1; i <= alphabetSize; i++) { //exclude the endmarker
                     int nextNode = getBase(root) + i;
-                    if (getCheck(nextNode) == root)
+                    if (nextNode < getDASize() && getCheck(nextNode) == root)
                         query(expression, nextIndex, nextNode, current + getCharFromOffset(i), words);
                 }
             } else {
                 int nextNode = getBase(root) + getOffset(next);
-                if(getCheck(nextNode) == root)
+                if(nextNode < getDASize() && getCheck(nextNode) == root)
                     query(expression, index + 1, nextNode, current + next, words);
             }
         }
