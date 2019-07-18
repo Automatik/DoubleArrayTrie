@@ -618,7 +618,7 @@ public class DoubleArrayTrie implements Serializable {
             char next = expression[index];
             if(next == WILDCARD) {
                 int nextIndex = index + 1;
-                for(int i = 1; i <= alphabetSize; i++) { //include the endmarker
+                for(int i = 1; i <= alphabetSize; i++) { //exclude the endmarker
                     int nextNode = getBase(root) + i;
                     if (getCheck(nextNode) == root)
                         query(expression, nextIndex, nextNode, current + getCharFromOffset(i), words);
