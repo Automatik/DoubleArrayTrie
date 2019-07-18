@@ -54,7 +54,7 @@ public class DoubleArrayTrie implements Serializable {
      * letter of the alphabet. So the value of endmarkerOffset is set
      * equal to alphabetSize + 1.
      */
-    private static int endmarkerOffset;
+    private int endmarkerOffset;
 
     private IntegerList base;
 
@@ -515,20 +515,25 @@ public class DoubleArrayTrie implements Serializable {
      */
     public ArrayList<String> match(String pattern) {
         ArrayList<String> words = new ArrayList<>();
-        for(int i = 0; i < pattern.length() - 1; i++) {
+        for(int i = 0; i < pattern.length(); i++) {
             char beginLetter = pattern.charAt(i);
             int currentNode = getBase(ROOT) + getOffset(beginLetter);
             String prefix = "" + beginLetter;
+            words.add(prefix);
             for(int j = i+1; j < pattern.length(); j++) {
                 char nextLetter = pattern.charAt(j);
                 prefix += nextLetter;
-                int nextNode = getBase(currentNode) + getOffset(nextLetter);
-                if(getCheck(nextNode) == currentNode && getBase(nextNode) < EMPTY_VALUE)
-                    words.add(composeWord(prefix, getBase(nextNode)));
-                int tailNode = getBase(currentNode) + getOffset(ENDMARKER);
-                if(getCheck(tailNode) == currentNode && getBase(tailNode) < EMPTY_VALUE)
-                    words.add(composeWord(prefix, ENDMARKER, getBase(tailNode)));
-                currentNode = nextNode;
+                if(getBase(currentNode) >= EMPTY_VALUE) {
+                    int nextNode = getBase(currentNode) + getOffset(nextLetter);
+                    if (getCheck(nextNode) == currentNode && getBase(nextNode) < EMPTY_VALUE)
+                        words.add(composeWord(prefix, getBase(nextNode)));
+                    if (getBase(nextNode) >= EMPTY_VALUE) {
+                        int tailNode = getBase(nextNode) + getOffset(ENDMARKER);
+                        if (getCheck(tailNode) == nextNode && getBase(tailNode) < EMPTY_VALUE)
+                            words.add(composeWord(prefix, ENDMARKER, getBase(tailNode)));
+                    }
+                    currentNode = nextNode;
+                }
             }
         }
         return words;
