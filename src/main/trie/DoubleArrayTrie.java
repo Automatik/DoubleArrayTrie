@@ -380,7 +380,9 @@ public class DoubleArrayTrie implements Serializable {
         //If there are no gaps
         int neededPositions = maxOffset - minOffset + 1;
         ensureReachableIndex(base.size() + neededPositions - 1);
-        return base.size() - neededPositions - minOffset;
+        int q = base.size() - neededPositions - minOffset;
+        assert q > 0;
+        return q;
     }
 
     private String longestCommonPrefix(String a, String b) {
@@ -481,7 +483,7 @@ public class DoubleArrayTrie implements Serializable {
         //Append the endmarker to the word or remove it
         int currentNode = getTrieNode(prefix);
         if(currentNode == EMPTY_VALUE)
-            return null;
+            return new ArrayList<>();
         ArrayList<String> words = new ArrayList<>();
         ArrayDeque<Integer> nodesQueue = new ArrayDeque<>();
         ArrayDeque<String> prefixQueue = new ArrayDeque<>();
@@ -526,8 +528,13 @@ public class DoubleArrayTrie implements Serializable {
                 if(getBase(currentNode) >= EMPTY_VALUE) {
                     int nextNode = getBase(currentNode) + getOffset(nextLetter);
                     if(nextNode < getDASize()) {
-                        if (getCheck(nextNode) == currentNode && getBase(nextNode) < EMPTY_VALUE)
-                            words.add(composeWord(prefix, getBase(nextNode)));
+                        if (getCheck(nextNode) == currentNode && getBase(nextNode) < EMPTY_VALUE) {
+                            String word = composeWord(prefix, getBase(nextNode));
+                            String suffix = pattern.substring(i);
+                            //Check if the letters in the tail are the prefix for the remaining pattern
+                            if(suffix.startsWith(word))
+                                words.add(word);
+                        }
                         if (getBase(nextNode) >= EMPTY_VALUE) {
                             int tailNode = getBase(nextNode) + getOffset(ENDMARKER);
                             if (getCheck(tailNode) == nextNode && getBase(tailNode) < EMPTY_VALUE)
