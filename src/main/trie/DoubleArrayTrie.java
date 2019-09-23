@@ -522,27 +522,29 @@ public class DoubleArrayTrie implements Serializable {
             int currentNode = getBase(ROOT) + getOffset(beginLetter);
             String prefix = "" + beginLetter;
             words.add(prefix);
-            for(int j = i+1; j < pattern.length(); j++) {
+            int j = i + 1;
+            boolean isPattern = true;
+            while (j < pattern.length() && isPattern && getBase(currentNode) >= EMPTY_VALUE) {
                 char nextLetter = pattern.charAt(j);
                 prefix += nextLetter;
-                if(getBase(currentNode) >= EMPTY_VALUE) {
-                    int nextNode = getBase(currentNode) + getOffset(nextLetter);
-                    if(nextNode < getDASize()) {
-                        if (getCheck(nextNode) == currentNode && getBase(nextNode) < EMPTY_VALUE) {
-                            String word = composeWord(prefix, getBase(nextNode));
-                            String suffix = pattern.substring(i);
-                            //Check if the letters in the tail are the prefix for the remaining pattern
-                            if(suffix.startsWith(word))
-                                words.add(word);
-                        }
-                        if (getBase(nextNode) >= EMPTY_VALUE) {
-                            int tailNode = getBase(nextNode) + getOffset(ENDMARKER);
-                            if (getCheck(tailNode) == nextNode && getBase(tailNode) < EMPTY_VALUE)
-                                words.add(composeWord(prefix, ENDMARKER, getBase(tailNode)));
-                        }
-                        currentNode = nextNode;
+                int nextNode = getBase(currentNode) + getOffset(nextLetter);
+                if(nextNode < getDASize() && getCheck(nextNode) == currentNode) {
+                    if(getBase(nextNode) < EMPTY_VALUE) {
+                        String word = composeWord(prefix, getBase(nextNode));
+                        String suffix = pattern.substring(i);
+                        //Check if the letters in the tail are the prefix for the remaining pattern
+                        if(suffix.startsWith(word))
+                            words.add(word);
+                    } else {
+                        int tailNode = getBase(nextNode) + getOffset(ENDMARKER);
+                        if (getCheck(tailNode) == nextNode && getBase(tailNode) < EMPTY_VALUE)
+                            words.add(composeWord(prefix, ENDMARKER, getBase(tailNode)));
                     }
+                    currentNode = nextNode;
+                } else {
+                    isPattern = false;
                 }
+                j++;
             }
         }
         return words;
