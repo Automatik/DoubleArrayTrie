@@ -378,9 +378,12 @@ public class DoubleArrayTrie implements Serializable {
         }
 
         //If there are no gaps
-        int neededPositions = maxOffset - minOffset + 1;
-        ensureReachableIndex(base.size() + neededPositions - 1);
-        int q = base.size() - neededPositions - minOffset;
+//        int neededPositions = maxOffset - minOffset + 1;
+//        ensureReachableIndex(base.size() + neededPositions - 1);
+//        int q = base.size() - neededPositions - minOffset;
+//        assert q > 0;
+        int q = base.size() - 1;
+        ensureReachableIndex(q + maxOffset);
         assert q > 0;
         return q;
     }
