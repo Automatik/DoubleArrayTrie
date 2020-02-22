@@ -217,9 +217,6 @@ public class DoubleArrayTrie implements Serializable {
         if(getCheck(nextNode) != EMPTY_VALUE) {
             //A node k already present in that position
             int kNode = getCheck(nextNode);
-            if (getBase(kNode) < EMPTY_VALUE) {
-                System.out.println("kNode: "+kNode+" nextNode: "+nextNode+" currentNode: "+currentNode+" remainingInput: "+remainingInput);
-            }
             TreeSet<Integer> currentNodeList = setList(currentNode);
             TreeSet<Integer> kNodeList = setList(kNode);
             if(currentNodeList.size() + 1 < kNodeList.size()) {
@@ -465,66 +462,10 @@ public class DoubleArrayTrie implements Serializable {
 
     private int getOffset(int letter) {
         //+ 1 because 'a' = 1
-//        switch (letter) {
-//            case 'à': return 'z' + 1 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'á': return 'z' + 2 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'â': return 'z' + 3 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'æ': return 'z' + 4 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'ç': return 'z' + 5 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'è': return 'z' + 6 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'é': return 'z' + 7 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'ê': return 'z' + 8 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'ë': return 'z' + 9 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'î': return 'z' + 10 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'ï': return 'z' + 11 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'ñ': return 'z' + 12 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'ô': return 'z' + 13 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'ö': return 'z' + 14 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'ù': return 'z' + 15 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'û': return 'z' + 16 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'ü': return 'z' + 17 - FIRST_ALPHABET_CHARACTER + 1;
-//            case ' ': return 'z' + 18 - FIRST_ALPHABET_CHARACTER + 1;
-//            case ENDMARKER: return endmarkerOffset;
-//            default: return letter - FIRST_ALPHABET_CHARACTER + 1;
-//        }
-//        switch (letter) {
-//            case 'å': return 'z' + 1 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'ä': return 'z' + 2 - FIRST_ALPHABET_CHARACTER + 1;
-//            case 'ö': return 'z' + 3 - FIRST_ALPHABET_CHARACTER + 1;
-//            case ENDMARKER: return endmarkerOffset;
-//            default: return letter - FIRST_ALPHABET_CHARACTER + 1;
-//        }
         return (letter == ENDMARKER) ? endmarkerOffset : letter - FIRST_ALPHABET_CHARACTER + 1;
     }
 
     private char getCharFromOffset(int offset) {
-//        switch (offset) {
-//            case 'z' + 1 - FIRST_ALPHABET_CHARACTER + 1: return 'à';
-//            case 'z' + 2 - FIRST_ALPHABET_CHARACTER + 1: return 'á';
-//            case 'z' + 3 - FIRST_ALPHABET_CHARACTER + 1: return 'â';
-//            case 'z' + 4 - FIRST_ALPHABET_CHARACTER + 1: return 'æ';
-//            case 'z' + 5 - FIRST_ALPHABET_CHARACTER + 1: return 'ç';
-//            case 'z' + 6 - FIRST_ALPHABET_CHARACTER + 1: return 'è';
-//            case 'z' + 7 - FIRST_ALPHABET_CHARACTER + 1: return 'é';
-//            case 'z' + 8 - FIRST_ALPHABET_CHARACTER + 1: return 'ê';
-//            case 'z' + 9 - FIRST_ALPHABET_CHARACTER + 1: return 'ë';
-//            case 'z' + 10 - FIRST_ALPHABET_CHARACTER + 1: return 'î';
-//            case 'z' + 11 - FIRST_ALPHABET_CHARACTER + 1: return 'ï';
-//            case 'z' + 12 - FIRST_ALPHABET_CHARACTER + 1: return 'ñ';
-//            case 'z' + 13 - FIRST_ALPHABET_CHARACTER + 1: return 'ô';
-//            case 'z' + 14 - FIRST_ALPHABET_CHARACTER + 1: return 'ö';
-//            case 'z' + 15 - FIRST_ALPHABET_CHARACTER + 1: return 'ù';
-//            case 'z' + 16 - FIRST_ALPHABET_CHARACTER + 1: return 'û';
-//            case 'z' + 17 - FIRST_ALPHABET_CHARACTER + 1: return 'ü';
-//            case 'z' + 18 - FIRST_ALPHABET_CHARACTER + 1: return ' ';
-//            default: return (char)((offset == endmarkerOffset) ? ENDMARKER : offset + FIRST_ALPHABET_CHARACTER - 1);
-//        }
-//        switch (offset) {
-//            case 'z' + 1 - FIRST_ALPHABET_CHARACTER + 1: return 'å';
-//            case 'z' + 2 - FIRST_ALPHABET_CHARACTER + 1: return 'ä';
-//            case 'z' + 3 - FIRST_ALPHABET_CHARACTER + 1: return 'ö';
-//            default: return (char)((offset == endmarkerOffset) ? ENDMARKER : offset + FIRST_ALPHABET_CHARACTER - 1);
-//        }
         return (char)((offset == endmarkerOffset) ? ENDMARKER : offset + FIRST_ALPHABET_CHARACTER - 1);
     }
 
